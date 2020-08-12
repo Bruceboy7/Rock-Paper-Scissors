@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+
+<head>
+  <title>Rock-Paper-Scissors</title>
+</head>
+<body>
+  <h1>Open the JavaScript console to play <Strong>Rock, Paper, Scissors!</Strong></h1>
+  <p>Good luck!</p>
+
+<script>
+
+let computerPlay = () => {
+  gameStarted = true;
+  let randomNumber = Math.ceil(Math.random() * 12);
+  console.log("computer generated random number was: " + randomNumber);
+ 
+  let computerMove = "";
+  if (randomNumber <= 4 ) {
+    computerMove = "ROCK";
+  }
+  else if (randomNumber > 4 && randomNumber <= 8) {
+    computerMove = "PAPER";
+  }
+  else {
+    computerMove = "SCISSORS"
+  }
+  console.log("The computer's Move will be " + computerMove);  
+  startUp();
+}
+
+let startUp = () => {
+if (!gameStarted) {
+let ready = confirm("You ready to play?") ;
+
+ready ? computerPlay() : console.log("No problem. Refresh the page if you want to play. I'll just be... sitting here, i guess.");
+}
+else if (gameStarted) {
+  let ready = confirm("Ready.... Rock, Paper, Scissors... SHOOT!!!");
+
+  ready ? computerPlay() : console.log("Ok, done for now. Good attempt."); gameStarted = false;
+  
+}
+}
+
+let gameStarted = false;
+
+console.log("It's time for some Rock, Paper, Scissors!");
+startUp();
+
+
+</script>
+</body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</html>
