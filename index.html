@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <style>
   body {
-    background: linear-gradient(20deg, #fff, #ddd);
+    background: linear-gradient(20deg, #fff, #555);
     width: 100vw;
     height: 100wh;
   }
@@ -9,12 +9,11 @@
     top: 0;
     left: 0;
     display: grid;
-    grid-template-rows: 50px 200px 200px 200px 200px; 
+    grid-template-rows: 200px 200px 200px 200px; 
     align-items: stretch;
     justify-items: center;
 
   grid-template-areas: 
-    " rps "
     " title "
     " info "
     " start "
@@ -39,6 +38,8 @@
   height: 150px;
   width: 75vw;
   border: peachpuff 5px dotted;
+  box-shadow: rgb(66, 33, 11) 1px 1px 10px;
+  border-radius: 10px;
   padding-top: 40px ;  
   margin: 0 20%;
   
@@ -52,7 +53,6 @@
 }
 #rps {
   background-color: aliceblue;
-  grid-area: "rps";
   text-align: center;
   width: 100vw;
   height: 50px;
@@ -65,9 +65,13 @@
 </head>
 <body>
   <div id="landing">
-    <div id="rps">ROCK, PAPER, SCISSORS</div>
+    <!--
+      
+      <div id="rps">ROCK, PAPER, SCISSORS</div> 
+      
+      Old header idea   -->
     <h1 id="page-title">Press the button below to play Rock, Paper, Scissors!</h1>
-    <p id="info">Or take a peek behind the curtain with the Javascript console by right clicking anywhere and selecting 'Inspect Element' and typing 'game()' and pressing Enter. <br><br>Good luck!</p>
+    <p id="info">Or take a peek behind the curtain with the Javascript console by right clicking anywhere and selecting 'Inspect Element', seleting 'Console' and then typing 'game()' and pressing Enter. <br><br>Good luck!</p>
     <!--maybe this button can change to Restart once the game starts, and back to Click here to start when the game is cancelled-->
     <button id="start" onclick = "game()">Click here to start</button>
   </div>
@@ -99,7 +103,6 @@ let playRound = (playerSelection, computerSelection) => {
 
     //maybe add something to check if the user has inputted anything besides rock, paper, or scissors
 
-    console.log("The player inputted " + player + " and the computer entered " + computer + ".");
 
     if ((player == "ROCK" ) && (computer == "PAPER")) {
       computerScore += 1;
@@ -132,61 +135,72 @@ let playRound = (playerSelection, computerSelection) => {
     }
 
     }
+let displayWinner = () => {
+ alert("it was a " + (turnCount - 1) + " round match with " + tie + " tie" + ((tie > 1) ? "s" : "") + "! Very exciting! The winner is...");
+
+//--------------------Determine who won, and alert -------//
+ (computerScore > userScore) ? alert("The Computer!! - Winning " + computerScore + " - " + userScore + "! Try harder next time. ") : alert("You!!! You beat the computer " + userScore + " - " + computerScore + "! Way to go!!"); 
+
+ gameStarted = false;
+ //this only shows up once
+ return("Score:   Computer - " + computerScore + "    You: " + userScore);
+}
+
 let game = () => {
 
 if (!gameStarted) {
+
 let ready = confirm("You ready to play some Rock, Paper, Scissors?") ;
-let userInput = 'no input';
-computerScore = 0;
+
+if (ready) {
+  //since they're ready to play, we clear the board and get it ready for a new game 
+  gameStarted = true;
+  let userInput = '';
+  computerScore = 0;
   userScore = 0;
   tie = 0;
   roundResults = 0;
   turnCount = 1;
-let computerMove = computerPlay();
 
- 
-
-//for the future, i could use a userInput check here-ish to see if the user made an error or hit cancel, prompting them and or resetting the scores here too 
-if (ready) {
+  //starts the loop for first to 3
   while ((computerScore < 3) && (userScore < 3)){
+    //this if/else gets user input, using a prompt that accesses the past round's results and displays them
     if (turnCount == 1) {
       userInput = prompt("Round " + turnCount + "!\n\nRock, Paper, or Scissors?? Best 3 out of 5 wins! \nScore:   Computer - " + computerScore + "    You: " + userScore);
     }
     else {
-      userInput = prompt("Round " + (turnCount - 1) + " results: The computer picked " + computerMove + ". (you picked " + userInput + ").\n" + roundResults + "\n\nRock, Paper, or Scissors, Round " + turnCount + "! Choose wisely... \nScore:   Computer - " + computerScore + "    You: " + userScore + "     First to 3 wins!");
+      userInput = prompt("Round " + (turnCount - 1) + " results: " + roundResults + "\nThe computer picked " + computerMove + ". (you picked " + userInput + ")." + "\n\nRock, Paper, or Scissors, Round " + turnCount + "! Choose wisely... \nScore:   Computer - " + computerScore + "    You: " + userScore + "     First to 3 wins!");
     }
-turnCount += 1;
+     //for the future, i could use a userInput check here-ish to see if the user made an error or hit cancel, prompting them and or resetting the scores here too 
+    turnCount += 1;
 
-console.log("you typed: " + userInput); 
-computerMove = computerPlay();
-console.log("computer's play is: " + computerMove)
- roundResults = playRound(userInput, computerMove);
-
- console.log(roundResults + "\nThe score is-- Computer: " + computerScore + " -- User: " + userScore + ".")
- 
- 
-
+    computerMove = computerPlay();
+    console.log("computer's play is: " + computerMove)
+    console.log("you typed: " + userInput); 
+    roundResults = playRound(userInput, computerMove);
+    
   
-  console.log(roundResults + "\n\nRock, Paper, or Scissors?? \nScore:   Computer - " + computerScore + "    You: " + userScore);
-  console.log("The score is-- Computer: " + computerScore + " -- User: " + userScore + ".");
+    console.log(roundResults + "\n\nRock, Paper, or Scissors?? \nScore:   Computer - " + computerScore + "    You: " + userScore);
+  
 
- }
- alert("it was a " + (turnCount - 1) + " round match with " + tie + " tie" + ((tie > 1) ? "s" : "") + "! Very exciting! The winner is...");
+  }
+//Display Results (build suspense) ....
+return(displayWinner());
 
-//--------------------Determine who won, and alert -------//
- (computerScore > userScore) ? alert("The Computer!! - Winning " + computerScore + " - " + userScore + "! Try harder next time. ") : alert("You!!! You beat the computer " + userScore + " - " + computerScore + "! Way to go! ") 
 }
 else {
   gameStarted = false;
+  console.log("it's hitting the else statement concerning ready")
   userScore = 0;
   tie = 0;
   roundResults = 0;
   turnCount = 1;
   console.log("No problem. Refresh the page if you want to play. I'll just be... sitting here, i guess.");
-}
 userScore = computerScore = 0;
 }
-else if (gameStarted) {
+//this could be a "pick up where you were?" and i could make it not clear
+}
+if (gameStarted) {
   let ready = confirm("Back for more?? Let's do it! Ready.... Rock, Paper, Scissors... SHOOT!!!");
   gameStarted = false;
   computerScore = 0;
