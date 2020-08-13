@@ -1,51 +1,217 @@
 <!DOCTYPE html>
+<style>
+  body {
+    background: linear-gradient(20deg, #fff, #ddd);
+    width: 100vw;
+    height: 100wh;
+  }
+  #landing {
+    top: 0;
+    left: 0;
+    display: grid;
+    grid-template-rows: 50px 200px 200px 200px 200px; 
+    align-items: stretch;
+    justify-items: center;
 
+  grid-template-areas: 
+    " rps "
+    " title "
+    " info "
+    " start "
+    " . ";
+  }
+#page-title {
+  grid-area: "title";
+  text-align: center;
+  text-justify: center;
+  width: 100vw;
+  height: 10vh;
+  top: 0;
+  left: 0;
+  
+
+}
+#info {
+  grid-area: "info";
+  font-size: 24px;
+  background-color: antiquewhite;
+  text-align: center;
+  height: 150px;
+  width: 75vw;
+  border: peachpuff 5px dotted;
+  padding-top: 40px ;  
+  margin: 0 20%;
+  
+}
+#start {
+  grid-area: "start";
+  margin-top: 20px;
+  width: 25vw;
+  height: 10vh;
+
+}
+#rps {
+  background-color: aliceblue;
+  grid-area: "rps";
+  text-align: center;
+  width: 100vw;
+  height: 50px;
+  top: 0;
+  left: 0;
+}
+  </style>
 <head>
   <title>Rock-Paper-Scissors</title>
 </head>
 <body>
-  <h1>Open the JavaScript console to play <Strong>Rock, Paper, Scissors!</Strong></h1>
-  <p>Good luck!</p>
+  <div id="landing">
+    <div id="rps">ROCK, PAPER, SCISSORS</div>
+    <h1 id="page-title">Press the button below to play Rock, Paper, Scissors!</h1>
+    <p id="info">Or take a peek behind the curtain with the Javascript console by right clicking anywhere and selecting 'Inspect Element' and typing 'game()' and pressing Enter. <br><br>Good luck!</p>
+    <!--maybe this button can change to Restart once the game starts, and back to Click here to start when the game is cancelled-->
+    <button id="start" onclick = "game()">Click here to start</button>
+  </div>
+ 
 
 <script>
 
 let computerPlay = () => {
   gameStarted = true;
   let randomNumber = Math.ceil(Math.random() * 12);
-  console.log("computer generated random number was: " + randomNumber);
  
   let computerMove = "";
   if (randomNumber <= 4 ) {
-    computerMove = "ROCK";
+    computerMove = "Rock";
   }
   else if (randomNumber > 4 && randomNumber <= 8) {
-    computerMove = "PAPER";
+    computerMove = "Paper";
   }
   else {
-    computerMove = "SCISSORS"
+    computerMove = "Scissors"
   }
-  console.log("The computer's Move will be " + computerMove);  
-  startUp();
+
+  return(computerMove);
 }
+let playRound = (playerSelection, computerSelection) => {
 
-let startUp = () => {
+    let player = playerSelection.toUpperCase();
+    let computer = computerSelection.toUpperCase();
+
+    //maybe add something to check if the user has inputted anything besides rock, paper, or scissors
+
+    console.log("The player inputted " + player + " and the computer entered " + computer + ".");
+
+    if ((player == "ROCK" ) && (computer == "PAPER")) {
+      computerScore += 1;
+     return("looks like the computer wins. paper covers rock. ");
+    } else if ((player == "ROCK" ) && (computer == "SCISSORS")) {
+      userScore += 1;
+     return("looks like you win. rock crushes scissors. ");
+    } else if ((player == "PAPER" ) && (computer == "ROCK")) {
+      userScore += 1;
+     return("looks like you win. paper covers rock. ");
+    } else if ((player == "PAPER" ) && (computer == "SCISSORS")) {
+      computerScore += 1;
+     return("looks like the computer wins. scissors cut through paper.");
+    } else if ((player == "SCISSORS" ) && (computer == "PAPER")) {
+      userScore += 1;
+     return("looks like you win. scissors cut through paper. ");
+    } else if ((player == "SCISSORS" ) && (computer == "ROCK")) {
+      computerScore += 1;
+     return("looks like the computer wins. rock crushes scissors. ");
+    } else if (player === computer) {
+      tie += 1;
+      return("Looks like it's a tie! you both picked " + player + ".");
+      
+      
+    }
+    else {
+      turnCount -= 1;
+      return("I'm having trouble with that response. Did you throw rock, paper or scissors?");
+      
+    }
+
+    }
+let game = () => {
+
 if (!gameStarted) {
-let ready = confirm("You ready to play?") ;
+let ready = confirm("You ready to play some Rock, Paper, Scissors?") ;
+let userInput = 'no input';
+computerScore = 0;
+  userScore = 0;
+  tie = 0;
+  roundResults = 0;
+  turnCount = 1;
+let computerMove = computerPlay();
 
-ready ? computerPlay() : console.log("No problem. Refresh the page if you want to play. I'll just be... sitting here, i guess.");
+ 
+
+//for the future, i could use a userInput check here-ish to see if the user made an error or hit cancel, prompting them and or resetting the scores here too 
+if (ready) {
+  while ((computerScore < 3) && (userScore < 3)){
+    if (turnCount == 1) {
+      userInput = prompt("Round " + turnCount + "!\n\nRock, Paper, or Scissors?? Best 3 out of 5 wins! \nScore:   Computer - " + computerScore + "    You: " + userScore);
+    }
+    else {
+      userInput = prompt("Round " + (turnCount - 1) + " results: The computer picked " + computerMove + ". (you picked " + userInput + ").\n" + roundResults + "\n\nRock, Paper, or Scissors, Round " + turnCount + "! Choose wisely... \nScore:   Computer - " + computerScore + "    You: " + userScore + "     First to 3 wins!");
+    }
+turnCount += 1;
+
+console.log("you typed: " + userInput); 
+computerMove = computerPlay();
+console.log("computer's play is: " + computerMove)
+ roundResults = playRound(userInput, computerMove);
+
+ console.log(roundResults + "\nThe score is-- Computer: " + computerScore + " -- User: " + userScore + ".")
+ 
+ 
+
+  
+  console.log(roundResults + "\n\nRock, Paper, or Scissors?? \nScore:   Computer - " + computerScore + "    You: " + userScore);
+  console.log("The score is-- Computer: " + computerScore + " -- User: " + userScore + ".");
+
+ }
+ alert("it was a " + (turnCount - 1) + " round match with " + tie + " tie" + ((tie > 1) ? "s" : "") + "! Very exciting! The winner is...");
+
+//--------------------Determine who won, and alert -------//
+ (computerScore > userScore) ? alert("The Computer!! - Winning " + computerScore + " - " + userScore + "! Try harder next time. ") : alert("You!!! You beat the computer " + userScore + " - " + computerScore + "! Way to go! ") 
+}
+else {
+  gameStarted = false;
+  userScore = 0;
+  tie = 0;
+  roundResults = 0;
+  turnCount = 1;
+  console.log("No problem. Refresh the page if you want to play. I'll just be... sitting here, i guess.");
+}
+userScore = computerScore = 0;
 }
 else if (gameStarted) {
-  let ready = confirm("Ready.... Rock, Paper, Scissors... SHOOT!!!");
+  let ready = confirm("Back for more?? Let's do it! Ready.... Rock, Paper, Scissors... SHOOT!!!");
+  gameStarted = false;
+  computerScore = 0;
+  userScore = 0;
+  tie = 0;
+  roundResults = 0;
+  turnCount = 1;
 
-  ready ? computerPlay() : console.log("Ok, done for now. Good attempt."); gameStarted = false;
+  ready ? game() : console.log("Ok, done for now. Good attempt."); gameStarted = false;
   
 }
 }
 
-let gameStarted = false;
 
-console.log("It's time for some Rock, Paper, Scissors!");
-startUp();
+  
+
+let gameStarted = false;
+let computerScore = 0;
+let userScore = 0;
+let roundResults = "";
+let tie = 0;
+let turnCount = 1;
+
+
+console.log("If you would like to play Rock, Paper, Scissors:  \n\nEnter 'game()' into the console to start, or just hit the button on the page.");
 
 
 </script>
