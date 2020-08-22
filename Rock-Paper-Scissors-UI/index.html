@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<style>
+  body {
+    background: linear-gradient(120deg, #fff, #555);
+    width: 100vw;
+    height: 100wh;
+  }
+  #landing {
+    top: 0;
+    left: 0;
+    display: grid;
+    width: 100vw;
+    height: 100vh;
+    grid-template-rows: 1fr 3fr 1fr; 
+    align-items: center;
+    justify-items: center;
+  
+   
+
+  grid-template-areas: 
+    " title "
+    " game "
+    " start " ;
+  }
+#page-title {
+  grid-area: "title";
+  text-align: center;
+  text-justify: center;
+  width: 100vw;
+  height: 5vh;
+
+  
+
+}
+#gameBoard {
+  grid-area: "game";
+  color: #ccc;
+  font-size: 20px;
+  background-color: rgb(119, 113, 106);
+  text-align: center;
+  
+  height: 40vh;
+  width: 75vw;
+  border: rgb(25, 142, 219) 2px dashed ;
+  box-shadow: rgb(66, 33, 11) 1px 1px 10px;
+  border-radius: 10px; 
+  opacity: 50%;
+
+}
+
+#start {
+  grid-area: "start";
+  width: 25vw;
+  height: 10vh;
+  border-radius: 20px;
+  background-color: #2255ff99;
+  box-shadow: 1px 1px 3px gray;
+
+}
+.deadButton {
+  background-color: gray !important;
+}
+  </style>
+<head>
+  <title>Rock-Paper-Scissors</title>
+</head>
+<body>
+  <div id="landing">
+  
+    <h1 id="page-title">Press the button below to play Rock, Paper, Scissors!</h1>
+    <div id="gameBoard">Good luck!</div>
+    <!--maybe this button can change to Restart once the game starts, and back to Click here to start when the game is cancelled-->
+    <button id="start" onclick = "makeGameBoard()">Click here to start</button>
+  </div>
+ 
+
+<script>
+
+let resetBoard = () => {
+//look into a way to not hard reset/clear background color and score. Can we isolate that part out of it?
+
+      let gameStarted = true;
+      let userInput = '';
+      computerScore = 0;
+      userScore = 0;
+      ties = 0;
+      roundResults = 'nothing happened yet...';
+      turnCount = 1; 
+     
+      let displayBox = document.getElementById('displayBox') 
+      killButtons("RESET", "RESET");
+
+      displayBox.style.backgroundColor = "#aaaaff66"
+      displayBox.textContent = "Ready to play again?? Just click one of the buttons below."
+      displayScore.textContent = 'First one to 5 wins!'
+    }
+let makeMiniDisplay = (winner) => {
+          
+          const miniDisplay = document.createElement('div')
+          setIdAndClass("miniDisplay", "output", miniDisplay)
+          miniDisplay.style.backgroundColor = "#dddddddd"
+          miniDisplay.style = "display: grid; justify-items: center; align-items: center; trid-template-columns: 1fr; grid-template-rows: 1fr 3fr 1fr; width: 36vw; height: 26vh;  background-color: #66666666; box-shadow: 0px 0px 2px white"
+          
+          
+
+          
+          const displayMsg1 = document.createElement('span')
+          setIdAndClass('displayMsg1', "output", displayMsg1 )
+          const resultPic = document.createElement('img')
+          setIdAndClass('resultPic', "output", resultPic )
+          const displayMsg2 = document.createElement('span')
+          setIdAndClass('displayMsg2', "output", displayMsg2 )
+
+          miniDisplay.appendChild(displayMsg1)
+          miniDisplay.appendChild(resultPic)
+          miniDisplay.appendChild(displayMsg2)
+
+          displayMsg1.textContent = "Test of the Mini Display"
+          resultPic.setAttribute('src', "https://static.thenounproject.com/png/3373379-200.png")
+          resultPic.style = "height: 15vh; width: auto;"
+          displayMsg2.textContent = "Bottom of the output"
+         
+          return(miniDisplay)
+
+         }
+let killButtons = (move, compMove) => {
+
+  rockBtn.classList.add("deadButton")
+  paperBtn.classList.add("deadButton")
+  scissorsBtn.classList.add("deadButton")
+
+  compRockBtn.classList.add("deadButton")
+  compPaperBtn.classList.add("deadButton")
+  compScissorsBtn.classList.add("deadButton") 
+  
+  switch (move) {
+    case "ROCK":
+      rockBtn.classList.remove("deadButton")
+      break;
+    case "PAPER":
+    paperBtn.classList.remove("deadButton")
+      break;
+    case "SCISSORS":
+    scissorsBtn.classList.remove("deadButton")
+      break;
+    case "RESET":
+
+  rockBtn.classList.remove("deadButton")
+  paperBtn.classList.remove("deadButton")
+  scissorsBtn.classList.remove("deadButton")
+  break;
+
+  }
+
+  switch (compMove) {
+    case "ROCK":
+      compRockBtn.classList.remove("deadButton")
+      break;
+    case "PAPER":
+    compPaperBtn.classList.remove("deadButton")
+      break;
+    case "SCISSORS":
+    compScissorsBtn.classList.remove("deadButton")
+      break;
+    case "RESET":
+
+  compRockBtn.classList.remove("deadButton")
+  compPaperBtn.classList.remove("deadButton")
+  compScissorsBtn.classList.remove("deadButton")
+  break;
+
+  }
+}         
+let updateScore = (winner) => { 
+        
+
+        
+        let displayBox = document.getElementById('displayBox')
+        let miniDisplay = makeMiniDisplay(winner);
+        
+        displayBox.textContent = ""
+       
+        displayBox.appendChild(miniDisplay)
+        
+
+    
+
+      if (winner == 'computer') {
+        computerScore += 1;
+        turnCount += 1;
+        displayBox.style.backgroundColor = "#ffaaaa66"
+        
+        displayMsg1.textContent = "The Computer bested you..."
+          resultPic.setAttribute('src', "https://static.thenounproject.com/png/2877638-200.png")
+          
+          displayMsg2.textContent = "Still anybody's game, though!"
+        
+        
+      }
+      if (winner == 'player') {
+        userScore += 1;
+        turnCount += 1;
+        displayBox.style.backgroundColor = "#aaffaa66"
+
+        displayMsg1.textContent = "You won that round!"
+          resultPic.setAttribute('src', "https://static.thenounproject.com/png/624813-200.png")
+          
+          displayMsg2.textContent = "It's not over yet..."
+        
+      
+      }
+      if (winner == 'tie') {
+        ties += 1;
+        turnCount +=1
+        displayBox.style.backgroundColor = "#aaaaff66"
+
+        displayMsg1.textContent = "Great minds think alike!"
+          resultPic.setAttribute('src', "https://static.thenounproject.com/png/2356357-200.png")
+          displayMsg2.textContent = "This time, it was a Tie."
+        
+    
+      }
+      if (winner == '?') {
+        console.log("that one didn't count for some reason")
+      }
+
+      console.log(`${roundResults} \n\nRock, Paper, or Scissors (Top of Round ${turnCount}): \nScore:   Computer - ${computerScore}    You: ${userScore}`);
+//displays the score
+      displayScore.textContent = `Score: Computer: ${computerScore} -- You: ${userScore}${(((computerScore == 4) || (userScore == 4)) && ((computerScore != 5) && (userScore != 5))) ? "! Game point!!" : "."}`
+      displayScore.style.backgroundColor = "white"
+       
+let placeholder = displayScore.textContent
+let bump = 1
+      if ((computerScore > 4) || (userScore > 4)) {
+    displayWinner();
+    resetBoard();
+    bump = 0;
+  }
+  if (bump == 0){
+displayScore.textContent = "Previous " + placeholder 
+  }
+  
+      return;
+    }
+let computerPlay = () => {
+  let gameStarted = true;
+  let randomNumber = Math.ceil(Math.random() * 12);
+ 
+  let computerMove = "";
+  if (randomNumber <= 4 ) {
+    computerMove = "Rock";
+  }
+  else if (randomNumber > 4 && randomNumber <= 8) {
+    computerMove = "Paper";
+  }
+  else {
+    computerMove = "Scissors"
+  }
+
+  return(computerMove);
+}
+let playRound = (playerSelection, computerSelection) => {
+
+    let player = playerSelection.toUpperCase();
+    let computer = computerSelection.toUpperCase();
+
+
+    killButtons(player, computer);
+   
+
+    if ((player == "ROCK" ) && (computer == "PAPER")) {
+      roundResults = "looks like the computer wins. paper covers rock. ";
+      updateScore('computer'); 
+      
+       return(roundResults);
+    }
+    if ((player == "ROCK" ) && (computer == "SCISSORS")) {
+      
+      roundResults = "looks like you win. rock crushes scissors. ";
+      updateScore('player');
+        return(roundResults);
+
+    }
+    if ((player == "PAPER" ) && (computer == "ROCK")) {
+      
+      roundResults = "looks like you win. paper covers rock. ";
+      updateScore('player');
+        return(roundResults);
+    } 
+    if ((player == "PAPER" ) && (computer == "SCISSORS")) {
+      roundResults = "looks like the computer wins. scissors cut through paper.";
+      updateScore('computer');
+        return(roundResults);
+    } 
+    if ((player == "SCISSORS" ) && (computer == "PAPER")) {
+      roundResults = "looks like you win. scissors cut through paper. ";
+      updateScore('player');
+        return(roundResults);
+   } 
+    if ((player == "SCISSORS" ) && (computer == "ROCK")) {
+      
+      roundResults = "looks like the computer wins. rock crushes scissors. ";
+      updateScore('computer');
+        return(roundResults);
+    } 
+    if (player === computer) {
+      
+      roundResults = "Looks like it's a tie! you both picked " + player + ".";
+      updateScore('tie');
+        return(roundResults);
+    }
+
+    else{
+      
+      roundResults = "I'm having trouble with that response. Did you throw rock, paper or scissors?";
+      updateScore('?');
+      return(roundResults);
+    }
+return(roundResults);
+    }
+let displayWinner = () => {
+ alert("it was a " + (turnCount - 1) + " round match with " + ties + " tie" + ((ties > 1) ? "s" : "") + "! Very exciting! The winner is...");
+//maybe make a button appear in the game screen that you click to see the results.
+
+//--------------------Determine who won, and alert -------//
+ (computerScore > userScore) ? alert("The Computer!! - Winning " + computerScore + " - " + userScore + "! Try harder next time. ") : alert("You!!! You beat the computer " + userScore + " - " + computerScore + "! Way to go!!"); 
+
+ gameStarted = false;
+ 
+
+ //this only shows up once
+ return("Score:   Computer - " + computerScore + "    You: " + userScore);
+}
+let setIdAndClass = (newId, newClass, passed) => {
+
+    passed.setAttribute('id', newId)
+    passed.setAttribute('class', newClass)
+  }
+let formatButton = (color, passed) => {
+
+  if (color == 'red') {
+    
+    passed.textContent = "Rock"
+    passed.setAttribute('style', `box-shadow: 1px 1px 1px #ff555599; background-color: #ff555599; height: 5vh; width: 12vw;`)
+    passed.setAttribute('onclick', 'playRound("rock", computerPlay())');
+    
+    return;
+  }
+  if (color === 'blue') {
+    passed.textContent = "Paper"
+    passed.setAttribute('style', `box-shadow: 1px 1px 1px #5555FF99; background-color: #5555FF99; height: 5vh; width: 12vw;`)
+    passed.setAttribute('onclick', 'playRound("paper", computerPlay())');
+    return
+  }
+  if (color === 'green') {
+    passed.textContent = "Scissors"
+    passed.setAttribute('style', `box-shadow: 1px 1px 2px #55886699; background-color: #558866aa; height: 5vh; width: 12vw; `) 
+    passed.setAttribute('onclick', 'playRound("scissors", computerPlay())');
+    return
+  }
+  else { 
+    passed.textContent = "?"
+    passed.setAttribute('style', 'box-shadow: 0px 0px 0px black; background-color: gray;')
+    console.log("the color couldn't be processed for some reason")
+    passed.setAttribute('onclick', 'playRound("?", computerPlay())');
+    return
+  }
+}
+let makeGameBoard = () => {
+
+let gameStarted = true;
+let userInput = '';
+  computerScore = 0;
+  userScore = 0;
+  ties = 0;
+  roundResults = 'nothing happened yet...';
+  turnCount = 1;
+
+
+
+
+
+document.createElement('div')
+const gameFrame = document.getElementById('gameBoard')
+setIdAndClass('gameFrame', 'in-game' , gameFrame);
+gameFrame.style = ' grid-template-columns: 60vw; grid-template-rows: 5vh 46vh 8vh; display: grid; align-items: center; justify-items: center; background-color: #2255ff99; border-radius: 6px; text-align: center; padding: 0; box-shadow: 2px 2px 6px gray; border: 5px outset darkgray; '
+gameFrame.textContent = null
+
+
+const gameTitle = document.createElement("h1")
+setIdAndClass('gameTitle', "in-game title" , gameTitle)
+gameTitle.style = " height: 4vh ; width: 48vw ; font-size: 3vh;"
+gameTitle.textContent = "Rock Paper Scissors"
+
+const gameBoard = document.createElement('div')
+gameBoard.style = 'width: 50vw; height: 44vh; display: grid; grid-template-columns: 48vw; grid-template-rows: 7vh 30vh 7vh; justify-content: center; align-items: center; justify-items: center; align-content: center; background-color: #ddddddcc; border-radius: 3px; border: 8px outset white; margin-top: 10px;'
+setIdAndClass('fullGameBoard', "gameBoard in-game", gameBoard);
+
+const compButtons = document.createElement('div');
+setIdAndClass('compButtons', "buttons ingame", compButtons);
+compButtons.style = "width: 30vw; height: 7vh; display: flex; justify-content: space-around; align-items: center;"
+
+const displayBox = document.createElement('div')
+setIdAndClass('displayBox', 'display gameBoard in-game', displayBox)
+displayBox.style = "display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #aaaaff66; height: 28vh; width: 38vw; border: 8px inset gray; border-radius: 3px; overflow-y: scroll;"
+
+const addUpdate = document.createElement('p');
+setIdAndClass('output', "output gameBoard in-game", addUpdate)
+addUpdate.textContent = "Ready to Play!";
+addUpdate.style = "font-size: 10px;"
+
+const displayScore = document.createElement("h2")
+setIdAndClass('displayScore', "in-game score" , displayScore)
+displayScore.style = " height: 3vh ; text-decoration: italics; width: 48vw;  font-size: 30px; text-align: center; font-size: 2vh; border-radius: 1vh;"
+displayScore.textContent = "--First one to 5 wins--"
+
+
+
+
+const buttons = document.createElement('div')
+setIdAndClass('buttons', "buttons ingame", buttons);
+buttons.style = "width: 40vw; display: flex; justify-content: space-around; padding-bottom: 15px;"
+
+
+
+gameFrame.appendChild(gameTitle)
+gameFrame.appendChild(gameBoard)
+gameFrame.appendChild(displayScore)
+
+gameBoard.appendChild(compButtons)
+gameBoard.appendChild(displayBox)
+displayBox.appendChild(addUpdate)
+gameBoard.appendChild(buttons)
+
+
+
+const rockBtn = document.createElement('button')
+setIdAndClass('rockBtn', 'button in-game', rockBtn)
+formatButton('red', rockBtn)
+
+
+const paperBtn = document.createElement('button')
+setIdAndClass('paperBtn', 'button in-game' , paperBtn);
+formatButton('blue', paperBtn)
+
+const scissorsBtn = document.createElement('button')
+setIdAndClass('scissorsBtn', 'button in-game', scissorsBtn)
+formatButton('green', scissorsBtn)
+
+
+const compRockBtn = rockBtn.cloneNode(true)
+setIdAndClass('compRockBtn', 'button in-game', compRockBtn)
+compRockBtn.textContent = "R"
+compRockBtn.style.borderRadius = "15px"
+compRockBtn.style.width = "6vw"
+compRockBtn.setAttribute("onclick", 'alert("Those are the computer\'s buttons, not yours!")')
+const compPaperBtn = paperBtn.cloneNode(true)
+setIdAndClass('compPaperBtn', 'button in-game', compPaperBtn)
+compPaperBtn.textContent = "P"
+compPaperBtn.style.borderRadius = "15px"
+compPaperBtn.style.width = "6vw"
+compPaperBtn.setAttribute("onclick", 'alert("Those are the computer\'s buttons, not yours!")')
+const compScissorsBtn = scissorsBtn.cloneNode(true)
+setIdAndClass('compScissorsBtn', 'button in-game', compScissorsBtn)
+compScissorsBtn.textContent = "S"
+compScissorsBtn.style.borderRadius = "15px"
+compScissorsBtn.style.width = "6vw"
+compScissorsBtn.setAttribute("onclick", 'alert("Those are the computer\'s buttons, not yours!")')
+
+
+buttons.appendChild(rockBtn)
+buttons.appendChild(paperBtn)
+buttons.appendChild(scissorsBtn)
+
+
+compButtons.appendChild(compRockBtn)
+compButtons.appendChild(compPaperBtn)
+compButtons.appendChild(compScissorsBtn)
+
+const buttonSwitch = document.getElementById('start');
+
+  buttonSwitch.textContent = "Click here to Reset"
+  buttonSwitch.setAttribute('onclick', 'resetBoard()')
+  
+
+
+
+
+
+
+
+}
+
+</script>
+</body>
+
+
+</html>
